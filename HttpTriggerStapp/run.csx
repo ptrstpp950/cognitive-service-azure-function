@@ -1,17 +1,18 @@
 #r "Newtonsoft.Json"
-#r "Microsoft.Azure.Storage.Blob"
 
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
+using Microsoft.Azure.Storage;
 using Microsoft.Azure.Storage.Blob;
+using System.Text.RegularExpressions;
 
 public static async Task<IActionResult> Run(HttpRequest req, ILogger log)
 {
     log.LogInformation("C# HTTP trigger function processed a request.");
 
-    dynamic data = await req.Content.ReadAsAsync<object>();
+    dynamic data = await req.Body.ReadAsAsync<object>();
     string photoBase64String = data.photoBase64;
     Uri uri = await UploadBlobAsync(photoBase64String);
     return (ActionResult)new OkObjectResult($"Hello, {name}");//req.CreateResponse(HttpStatusCode.OK, uri);
